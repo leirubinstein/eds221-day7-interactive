@@ -2,6 +2,8 @@
 title: "EDS 221 Day 7 Interactive Session"
 author: "Leilanie Rubinstein"
 format: html
+execute: 
+  warning: false
 editor_options: 
   chunk_output_type: console
 ---
@@ -10,5 +12,24 @@ editor_options:
 library(tidyverse)
 library(palmerpenguins)
 library(lubridate)
+```
+
+```{r}
+View(penguins)
+
+penguins_subset <- penguins %>%
+  dplyr::filter(island %in% c("Biscoe", "Dream")) %>%
+  dplyr::select(-sex, -year) %>%
+  dplyr::mutate(body_mass_kg = body_mass_g*1000) %>%
+  dplyr::rename(location = island)
+
+
+adelie_summary <- penguins %>%
+  dplyr::filter(species %in% "Adelie" & 
+                  !is.na(flipper_length_mm)) %>% # because we remove NA here, we don't need them in the `summarize(mean())` step
+  dplyr::group_by(sex) %>% # if you just run `group_by()` by itself, nothing will happen
+  dplyr::summarise(mean_flipper_length = mean(flipper_length_mm),
+                   sd_flipper_length = sd(flipper_length_mm),
+                   count = n())
 ```
 
